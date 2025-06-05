@@ -6,8 +6,6 @@
   <title>Binary Trading UI</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* আগের CSS ঠিক রেখে, শুধু নতুন modal CSS যুক্ত করা হয়েছে */
-
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -25,15 +23,20 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    .balance {
+    /* ডেমো ব্যালেন্স হলুদ রং */
+    .balance.demo {
       font-size: 16px;
-      color: #facc15;
+      color: #facc15; /* হলুদ */
       font-weight: bold;
       cursor: pointer;
     }
 
-    .live-balance {
-      color: #22c55e !important;
+    /* লাইভ ব্যালেন্স সবুজ রং */
+    .balance.live {
+      font-size: 16px;
+      color: #22c55e; /* সবুজ */
+      font-weight: bold;
+      cursor: pointer;
     }
 
     .top-buttons {
@@ -251,8 +254,9 @@
 </head>
 <body>
 
+  <!-- ডেমো ক্লাস দিয়ে শুরু করলাম -->
   <header>
-    <div class="balance" id="balanceSwitcher">Balance: $500.00 (Demo)</div>
+    <div class="balance demo" id="balanceSwitcher">Balance: $500.00 (Demo)</div>
     <div class="top-buttons">
       <button class="btn-deposit" id="depositBtn">Deposit</button>
       <button class="btn-withdraw" id="withdrawBtn">Withdraw</button>
@@ -348,7 +352,6 @@
   <div class="modal-overlay" id="accountModal">
     <div class="modal-content">
       <h2>Account Information</h2>
-      <!-- এখন এখানে কিছু দেখাবে না, পরে লগইন/রেজিস্ট্রেশন ডেটা আসবে -->
       <div class="info-text" style="text-align:center; color:#888;">User info will be displayed here after login.</div>
       <button class="confirm-btn" onclick="document.getElementById('accountModal').style.display='none'">Close</button>
     </div>
@@ -405,13 +408,17 @@
     function setBalance(type) {
       if (type === 'demo') {
         balanceDisplay.textContent = 'Balance: $500.00 (Demo)';
+        // ক্লাস পরিবর্তন করে হলুদ রঙ আনবো
+        balanceDisplay.classList.remove('live');
+        balanceDisplay.classList.add('demo');
       } else {
         balanceDisplay.textContent = 'Balance: $0.00 (Live)';
+        // ক্লাস পরিবর্তন করে সবুজ রঙ আনবো
+        balanceDisplay.classList.remove('demo');
+        balanceDisplay.classList.add('live');
       }
       balanceModal.style.display = 'none';
     }
-
   </script>
-
 </body>
 </html>
