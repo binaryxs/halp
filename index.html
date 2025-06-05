@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Binary Trading UI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
+    /* আগের CSS ঠিক রেখে, শুধু নতুন modal CSS যুক্ত করা হয়েছে */
+
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -202,7 +205,7 @@
 
     .modal-content label {
       display: block;
-      margin: 12px 0 5px;
+      margin: 10px 0 5px;
       font-weight: 600;
       font-size: 14px;
     }
@@ -218,17 +221,13 @@
       box-sizing: border-box;
     }
 
-    .modal-content .fixed-binance-id {
+    .modal-content .info-text {
       background: #0f172a;
-      color: #facc15;
-      font-weight: 700;
-      padding: 10px 14px;
+      padding: 10px;
       border-radius: 6px;
-      user-select: all;
+      margin: 8px 0;
       font-size: 15px;
-      margin-bottom: 15px;
-      text-align: center;
-      word-break: break-word;
+      color: #cbd5e1;
     }
 
     .modal-content button.confirm-btn {
@@ -249,7 +248,6 @@
       background-color: #2563eb;
     }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 
@@ -312,16 +310,12 @@
       <h2>Withdraw Form</h2>
       <label for="userName">User Name:</label>
       <input type="text" id="userName" placeholder="Enter your name" />
-
       <label for="userEmail">Email:</label>
       <input type="email" id="userEmail" placeholder="Enter your email" />
-
       <label for="withdrawAmount">Withdraw Amount ($):</label>
       <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw" />
-
       <label for="walletAddress">Wallet Address:</label>
       <input type="text" id="walletAddress" placeholder="Enter your wallet address" />
-
       <button class="confirm-btn" id="confirmWithdraw">Confirm Withdraw</button>
     </div>
   </div>
@@ -330,19 +324,13 @@
   <div class="modal-overlay" id="depositModal">
     <div class="modal-content">
       <h2>Deposit Form</h2>
-      <div class="fixed-binance-id" id="binanceId">
-        Binance ID: 0x1234567890abcdef1234567890abcdef12345678
-      </div>
-
+      <div class="info-text">Binance ID: 0x1234567890abcdef1234567890abcdef12345678</div>
       <label for="depositAmount">Deposit Amount ($):</label>
       <input type="number" id="depositAmount" placeholder="Enter deposit amount" />
-
       <label for="depositEmail">Email:</label>
       <input type="email" id="depositEmail" placeholder="Enter your email" />
-
       <label for="depositAccountName">Account Name:</label>
       <input type="text" id="depositAccountName" placeholder="Enter your account name" />
-
       <button class="confirm-btn" id="confirmDeposit">Confirm Deposit</button>
     </div>
   </div>
@@ -356,10 +344,22 @@
     </div>
   </div>
 
+  <!-- Account Info Modal -->
+  <div class="modal-overlay" id="accountModal">
+    <div class="modal-content">
+      <h2>Account Information</h2>
+      <div class="info-text">👤 Name: Jisan X</div>
+      <div class="info-text">📧 Email: jisan@example.com</div>
+      <div class="info-text">🆔 User ID: TRD123456</div>
+      <div class="info-text">🌍 Country: Bangladesh</div>
+      <button class="confirm-btn" onclick="document.getElementById('accountModal').style.display='none'">Close</button>
+    </div>
+  </div>
+
   <div class="bottom-nav">
     <div class="nav-item"><i class="fas fa-chart-line"></i>Market</div>
     <div class="nav-item"><i class="fas fa-wallet"></i>Wallet</div>
-    <div class="nav-item"><i class="fas fa-user"></i>Account</div>
+    <div class="nav-item" id="accountBtn"><i class="fas fa-user"></i>Account</div>
   </div>
 
   <script>
@@ -377,19 +377,15 @@
     const withdrawModal = document.getElementById('withdrawModal');
     const depositBtn = document.getElementById('depositBtn');
     const depositModal = document.getElementById('depositModal');
+    const balanceDisplay = document.getElementById('balanceSwitcher');
+    const balanceModal = document.getElementById('balanceModal');
+    const accountBtn = document.getElementById('accountBtn');
+    const accountModal = document.getElementById('accountModal');
 
-    withdrawBtn.onclick = () => {
-      withdrawModal.style.display = 'flex';
-    };
-    depositBtn.onclick = () => {
-      depositModal.style.display = 'flex';
-    };
-
-    window.onclick = function(event) {
-      if (event.target === withdrawModal) withdrawModal.style.display = 'none';
-      if (event.target === depositModal) depositModal.style.display = 'none';
-      if (event.target === balanceModal) balanceModal.style.display = 'none';
-    };
+    withdrawBtn.onclick = () => withdrawModal.style.display = 'flex';
+    depositBtn.onclick = () => depositModal.style.display = 'flex';
+    balanceDisplay.onclick = () => balanceModal.style.display = 'flex';
+    accountBtn.onclick = () => accountModal.style.display = 'flex';
 
     document.getElementById('confirmWithdraw').onclick = () => {
       alert('Withdraw request sent!');
@@ -397,37 +393,35 @@
     };
 
     document.getElementById('confirmDeposit').onclick = () => {
-      const depositAmount = document.getElementById('depositAmount').value.trim();
-      const depositEmail = document.getElementById('depositEmail').value.trim();
-      const depositAccountName = document.getElementById('depositAccountName').value.trim();
-
-      if (!depositAmount || !depositEmail || !depositAccountName) {
+      const amount = document.getElementById('depositAmount').value.trim();
+      const email = document.getElementById('depositEmail').value.trim();
+      const name = document.getElementById('depositAccountName').value.trim();
+      if (!amount || !email || !name) {
         alert('Please fill in all fields!');
         return;
       }
-
       alert('Deposit request sent!');
       depositModal.style.display = 'none';
     };
 
-    const balanceDisplay = document.getElementById('balanceSwitcher');
-    const balanceModal = document.getElementById('balanceModal');
-
-    balanceDisplay.onclick = () => {
-      balanceModal.style.display = 'flex';
-    };
-
     function setBalance(type) {
-      const balanceText = document.getElementById('balanceSwitcher');
+      const text = document.getElementById('balanceSwitcher');
       if (type === 'demo') {
-        balanceText.textContent = 'Balance: $500.00 (Demo)';
-        balanceText.classList.remove('live-balance');
-      } else if (type === 'live') {
-        balanceText.textContent = 'Balance: $0.00 (Live)';
-        balanceText.classList.add('live-balance');
+        text.textContent = 'Balance: $500.00 (Demo)';
+        text.classList.remove('live-balance');
+      } else {
+        text.textContent = 'Balance: $0.00 (Live)';
+        text.classList.add('live-balance');
       }
       balanceModal.style.display = 'none';
     }
+
+    window.onclick = function(event) {
+      if (event.target === withdrawModal) withdrawModal.style.display = 'none';
+      if (event.target === depositModal) depositModal.style.display = 'none';
+      if (event.target === balanceModal) balanceModal.style.display = 'none';
+      if (event.target === accountModal) accountModal.style.display = 'none';
+    };
   </script>
 </body>
 </html>
