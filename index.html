@@ -10,6 +10,7 @@
       font-family: 'Segoe UI', sans-serif;
       background: #0f172a;
       color: #fff;
+      padding-bottom: 60px; /* নিচের মেনুর জন্য জায়গা */
     }
 
     header {
@@ -58,7 +59,7 @@
     }
 
     .chart-section {
-      height: 480px; /* আগে ছিল 400px */
+      height: 480px;
       margin: 0;
       background: #0f172a;
       display: flex;
@@ -107,7 +108,40 @@
     .sell:hover {
       background: #dc2626;
     }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1e293b;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 60px;
+      border-top: 1px solid #334155;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: #cbd5e1;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .nav-item:hover {
+      color: #facc15;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 3px;
+    }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 
@@ -128,6 +162,26 @@
   <div class="trade-buttons">
     <button class="buy">Buy ↑</button>
     <button class="sell">Sell ↓</button>
+  </div>
+
+  <!-- Bottom Navigation Menu -->
+  <div class="bottom-nav">
+    <div class="nav-item">
+      <i class="fas fa-home"></i>
+      Home
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-user"></i>
+      Account
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-comments"></i>
+      Chat
+    </div>
+    <div class="nav-item">
+      <i class="fas fa-ellipsis-h"></i>
+      More
+    </div>
   </div>
 
 </body>
