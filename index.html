@@ -344,14 +344,12 @@
     </div>
   </div>
 
-  <!-- Account Info Modal -->
+  <!-- Account Info Modal (EMPTY) -->
   <div class="modal-overlay" id="accountModal">
     <div class="modal-content">
       <h2>Account Information</h2>
-      <div class="info-text">👤 Name: Jisan X</div>
-      <div class="info-text">📧 Email: jisan@example.com</div>
-      <div class="info-text">🆔 User ID: TRD123456</div>
-      <div class="info-text">🌍 Country: Bangladesh</div>
+      <!-- এখন এখানে কিছু দেখাবে না, পরে লগইন/রেজিস্ট্রেশন ডেটা আসবে -->
+      <div class="info-text" style="text-align:center; color:#888;">User info will be displayed here after login.</div>
       <button class="confirm-btn" onclick="document.getElementById('accountModal').style.display='none'">Close</button>
     </div>
   </div>
@@ -387,41 +385,33 @@
     balanceDisplay.onclick = () => balanceModal.style.display = 'flex';
     accountBtn.onclick = () => accountModal.style.display = 'flex';
 
+    // Close modals when clicking outside modal-content
+    window.onclick = (event) => {
+      if (event.target.classList.contains('modal-overlay')) {
+        event.target.style.display = 'none';
+      }
+    };
+
     document.getElementById('confirmWithdraw').onclick = () => {
-      alert('Withdraw request sent!');
+      alert('Withdraw request submitted!');
       withdrawModal.style.display = 'none';
     };
 
     document.getElementById('confirmDeposit').onclick = () => {
-      const amount = document.getElementById('depositAmount').value.trim();
-      const email = document.getElementById('depositEmail').value.trim();
-      const name = document.getElementById('depositAccountName').value.trim();
-      if (!amount || !email || !name) {
-        alert('Please fill in all fields!');
-        return;
-      }
-      alert('Deposit request sent!');
+      alert('Deposit request submitted!');
       depositModal.style.display = 'none';
     };
 
     function setBalance(type) {
-      const text = document.getElementById('balanceSwitcher');
       if (type === 'demo') {
-        text.textContent = 'Balance: $500.00 (Demo)';
-        text.classList.remove('live-balance');
+        balanceDisplay.textContent = 'Balance: $500.00 (Demo)';
       } else {
-        text.textContent = 'Balance: $0.00 (Live)';
-        text.classList.add('live-balance');
+        balanceDisplay.textContent = 'Balance: $0.00 (Live)';
       }
       balanceModal.style.display = 'none';
     }
 
-    window.onclick = function(event) {
-      if (event.target === withdrawModal) withdrawModal.style.display = 'none';
-      if (event.target === depositModal) depositModal.style.display = 'none';
-      if (event.target === balanceModal) balanceModal.style.display = 'none';
-      if (event.target === accountModal) accountModal.style.display = 'none';
-    };
   </script>
+
 </body>
 </html>
