@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Binary Trading UI</title>
   <style>
     body {
@@ -10,7 +10,7 @@
       font-family: 'Segoe UI', sans-serif;
       background: #0f172a;
       color: #fff;
-      padding-bottom: 60px; /* নিচের মেনুর জন্য জায়গা */
+      padding-bottom: 80px;
     }
 
     header {
@@ -42,25 +42,14 @@
       font-weight: bold;
     }
 
-    .btn-deposit {
-      background-color: #22c55e;
-    }
+    .btn-deposit { background-color: #22c55e; }
+    .btn-deposit:hover { background-color: #16a34a; }
 
-    .btn-deposit:hover {
-      background-color: #16a34a;
-    }
-
-    .btn-withdraw {
-      background-color: #3b82f6;
-    }
-
-    .btn-withdraw:hover {
-      background-color: #2563eb;
-    }
+    .btn-withdraw { background-color: #3b82f6; }
+    .btn-withdraw:hover { background-color: #2563eb; }
 
     .chart-section {
       height: 480px;
-      margin: 0;
       background: #0f172a;
       display: flex;
       align-items: center;
@@ -93,20 +82,59 @@
       transition: 0.3s;
     }
 
-    .buy {
-      background: #22c55e;
+    .buy { background: #22c55e; }
+    .buy:hover { background: #16a34a; }
+
+    .sell { background: #ef4444; }
+    .sell:hover { background: #dc2626; }
+
+    /* New: trade-options as grid 2 columns */
+    .trade-options {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px 20px;
+      align-items: center;
     }
 
-    .buy:hover {
-      background: #16a34a;
+    .trade-options > div {
+      display: flex;
+      flex-direction: column;
     }
 
-    .sell {
-      background: #ef4444;
+    .trade-options label {
+      font-size: 14px;
+      margin-bottom: 5px;
     }
 
-    .sell:hover {
-      background: #dc2626;
+    .trade-options select,
+    .trade-options input {
+      padding: 7px;         /* ছোট করা প্যাডিং */
+      border-radius: 6px;
+      border: none;
+      background-color: #1e293b;
+      color: #fff;
+      font-size: 14px;      /* ছোট ফন্ট সাইজ */
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .profit-box {
+      grid-column: span 2; /* Make profit box span both columns */
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 12px;
+      text-align: center;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    /* Estimated Profit-এর ডলার অংশ সবুজ রঙে */
+    #profitBox span {
+      color: #22c55e;
+      font-weight: 700;
     }
 
     /* Bottom Navigation */
@@ -164,6 +192,40 @@
     <button class="sell">Sell ↓</button>
   </div>
 
+  <div class="trade-options">
+    <div>
+      <label>Market Selection:</label>
+      <select>
+        <option>EUR/USD</option>
+        <option>GBP/JPY</option>
+        <option>BTC/USDT</option>
+        <option>GOLD/USD</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Trade Amount ($):</label>
+      <input type="number" id="tradeAmount" placeholder="Enter amount" oninput="calculateProfit()">
+    </div>
+
+    <div>
+      <label>Timeframe (minutes):</label>
+      <select>
+        <option>1</option>
+        <option>3</option>
+        <option>5</option>
+        <option>10</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Estimated Profit:</label>
+      <div class="profit-box" id="profitBox">
+        $<span>0.00</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Bottom Navigation Menu -->
   <div class="bottom-nav">
     <div class="nav-item">
@@ -183,6 +245,19 @@
       More
     </div>
   </div>
+
+  <script>
+    function calculateProfit() {
+      const amount = parseFloat(document.getElementById('tradeAmount').value);
+      const profitBox = document.getElementById('profitBox');
+      if (!isNaN(amount) && amount > 0) {
+        const profit = amount * 0.8;
+        profitBox.innerHTML = `$<span>${profit.toFixed(2)}</span>`;
+      } else {
+        profitBox.innerHTML = `$<span>0.00</span>`;
+      }
+    }
+  </script>
 
 </body>
 </html>
