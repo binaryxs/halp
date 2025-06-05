@@ -1,424 +1,428 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Binary Trading UI</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #0f172a;
-      color: #fff;
-      padding-bottom: 80px;
-    }
-
-    header {
-      background: #1e293b;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    /* ডেমো ব্যালেন্স হলুদ রং */
-    .balance.demo {
-      font-size: 16px;
-      color: #facc15; /* হলুদ */
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    /* লাইভ ব্যালেন্স সবুজ রং */
-    .balance.live {
-      font-size: 16px;
-      color: #22c55e; /* সবুজ */
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .top-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn-deposit, .btn-withdraw {
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .btn-deposit { background-color: #22c55e; }
-    .btn-deposit:hover { background-color: #16a34a; }
-
-    .btn-withdraw { background-color: #3b82f6; }
-    .btn-withdraw:hover { background-color: #2563eb; }
-
-    .chart-section {
-      height: 480px;
-      background: #0f172a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: #64748b;
-    }
-
-    .divider {
-      height: 2px;
-      background-color: #334155;
-      margin: 0 20px;
-    }
-
-    .trade-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-    }
-
-    .trade-buttons button {
-      flex: 1;
-      max-width: 200px;
-      padding: 15px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .buy { background: #22c55e; }
-    .buy:hover { background: #16a34a; }
-
-    .sell { background: #ef4444; }
-    .sell:hover { background: #dc2626; }
-
-    .trade-options {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px 20px;
-      align-items: center;
-    }
-
-    .trade-options > div {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .trade-options label {
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .trade-options select,
-    .trade-options input {
-      padding: 7px;
-      border-radius: 6px;
-      border: none;
-      background-color: #1e293b;
-      color: #fff;
-      font-size: 14px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .profit-box {
-      grid-column: span 2;
-      background: #0f172a;
-      border: 1px solid #334155;
-      padding: 8px 12px;
-      text-align: center;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 18px;
-      color: #fff;
-      max-height: 36px;
-      line-height: 1.2;
-    }
-
-    #profitBox span {
-      color: #22c55e;
-      font-weight: 700;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #1e293b;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      height: 60px;
-      border-top: 1px solid #334155;
-    }
-
-    .nav-item {
-      text-align: center;
-      color: #cbd5e1;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .nav-item:hover {
-      color: #facc15;
-    }
-
-    .nav-item i {
-      font-size: 20px;
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: #1e293b;
-      padding: 25px 30px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
-      box-sizing: border-box;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    }
-
-    .modal-content h2 {
-      margin-top: 0;
-      margin-bottom: 15px;
-      color: #facc15;
-      text-align: center;
-    }
-
-    .modal-content label {
-      display: block;
-      margin: 10px 0 5px;
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .modal-content input {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 6px;
-      border: none;
-      background: #0f172a;
-      color: #fff;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-
-    .modal-content .info-text {
-      background: #0f172a;
-      padding: 10px;
-      border-radius: 6px;
-      margin: 8px 0;
-      font-size: 15px;
-      color: #cbd5e1;
-    }
-
-    .modal-content button.confirm-btn {
-      margin-top: 15px;
-      width: 100%;
-      background: #3b82f6;
-      border: none;
-      padding: 12px 0;
-      font-size: 16px;
-      color: #fff;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .modal-content button.confirm-btn:hover {
-      background-color: #2563eb;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Binary Trading UI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #fff;
+            padding-bottom: 80px;
+        }
+        header {
+            background: #1e293b;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        /* ডেমো ব্যালেন্স হলুদ রং */
+        .balance.demo {
+            font-size: 16px;
+            color: #facc15; /* হলুদ */
+            font-weight: bold;
+            cursor: pointer;
+        }
+        /* লাইভ ব্যালেন্স সবুজ রং */
+        .balance.live {
+            font-size: 16px;
+            color: #22c55e; /* সবুজ */
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .top-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-deposit, .btn-withdraw {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-deposit {
+            background-color: #22c55e;
+        }
+        .btn-deposit:hover {
+            background-color: #16a34a;
+        }
+        .btn-withdraw {
+            background-color: #3b82f6;
+        }
+        .btn-withdraw:hover {
+            background-color: #2563eb;
+        }
+        .chart-section {
+            height: 480px;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #64748b;
+            /* Added styles for chart embedding */
+            padding: 10px; /* Optional: add some padding around the chart */
+            box-sizing: border-box; /* Ensures padding is included in height */
+        }
+        #tradingview_chart_container {
+            width: 100%;
+            height: 100%;
+        }
+        .divider {
+            height: 2px;
+            background-color: #334155;
+            margin: 0 20px;
+        }
+        .trade-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .trade-buttons button {
+            flex: 1;
+            max-width: 200px;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .buy {
+            background: #22c55e;
+        }
+        .buy:hover {
+            background: #16a34a;
+        }
+        .sell {
+            background: #ef4444;
+        }
+        .sell:hover {
+            background: #dc2626;
+        }
+        .trade-options {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px 20px;
+            align-items: center;
+        }
+        .trade-options > div {
+            display: flex;
+            flex-direction: column;
+        }
+        .trade-options label {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .trade-options select, .trade-options input {
+            padding: 7px;
+            border-radius: 6px;
+            border: none;
+            background-color: #1e293b;
+            color: #fff;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .profit-box {
+            grid-column: span 2;
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 8px 12px;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #fff;
+            max-height: 36px;
+            line-height: 1.2;
+        }
+        #profitBox span {
+            color: #22c55e;
+            font-weight: 700;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 60px;
+            border-top: 1px solid #334155;
+        }
+        .nav-item {
+            text-align: center;
+            color: #cbd5e1;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .nav-item:hover {
+            color: #facc15;
+        }
+        .nav-item i {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #1e293b;
+            padding: 25px 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-sizing: border-box;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #facc15;
+            text-align: center;
+        }
+        .modal-content label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: none;
+            background: #0f172a;
+            color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .modal-content .info-text {
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 8px 0;
+            font-size: 15px;
+            color: #cbd5e1;
+        }
+        .modal-content button.confirm-btn {
+            margin-top: 15px;
+            width: 100%;
+            background: #3b82f6;
+            border: none;
+            padding: 12px 0;
+            font-size: 16px;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .modal-content button.confirm-btn:hover {
+            background-color: #2563eb;
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <div class="balance demo" id="balanceSwitcher">Balance: $500.00 (Demo)</div>
+        <div class="top-buttons">
+            <button class="btn-deposit" id="depositBtn">Deposit</button>
+            <button class="btn-withdraw" id="withdrawBtn">Withdraw</button>
+        </div>
+    </header>
 
-  <!-- ডেমো ক্লাস দিয়ে শুরু করলাম -->
-  <header>
-    <div class="balance demo" id="balanceSwitcher">Balance: $500.00 (Demo)</div>
-    <div class="top-buttons">
-      <button class="btn-deposit" id="depositBtn">Deposit</button>
-      <button class="btn-withdraw" id="withdrawBtn">Withdraw</button>
-    </div>
-  </header>
-
-  <div class="chart-section">
-    📊 Market Chart Will Be Displayed Here
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="trade-buttons">
-    <button class="buy">Buy ↑</button>
-    <button class="sell">Sell ↓</button>
-  </div>
-
-  <div class="trade-options">
-    <div>
-      <label>Market Selection:</label>
-      <select>
-        <option>EUR/USD</option>
-        <option>GBP/JPY</option>
-        <option>BTC/USDT</option>
-        <option>GOLD/USD</option>
-      </select>
+    <div class="chart-section">
+        <div id="tradingview_chart_container"></div>
     </div>
 
-    <div>
-      <label>Trade Amount ($):</label>
-      <input type="number" id="tradeAmount" placeholder="Enter amount" oninput="calculateProfit()">
+    <div class="divider"></div>
+
+    <div class="trade-buttons">
+        <button class="buy">Buy ↑</button>
+        <button class="sell">Sell ↓</button>
     </div>
 
-    <div>
-      <label>Timeframe (minutes):</label>
-      <select>
-        <option>1</option>
-        <option>3</option>
-        <option>5</option>
-        <option>10</option>
-      </select>
+    <div class="trade-options">
+        <div>
+            <label>Market Selection:</label>
+            <select>
+                <option>EUR/USD</option>
+                <option>GBP/JPY</option>
+                <option>BTC/USDT</option>
+                <option>GOLD/USD</option>
+            </select>
+        </div>
+        <div>
+            <label>Trade Amount ($):</label>
+            <input type="number" id="tradeAmount" placeholder="Enter amount" oninput="calculateProfit()">
+        </div>
+        <div>
+            <label>Timeframe (minutes):</label>
+            <select>
+                <option>1</option>
+                <option>3</option>
+                <option>5</option>
+                <option>10</option>
+            </select>
+        </div>
+        <div>
+            <label>Estimated Profit:</label>
+            <div class="profit-box" id="profitBox">
+                $<span>0.00</span>
+            </div>
+        </div>
     </div>
 
-    <div>
-      <label>Estimated Profit:</label>
-      <div class="profit-box" id="profitBox">
-        $<span>0.00</span>
-      </div>
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal-content">
+            <h2>Withdraw Form</h2>
+            <label for="userName">User Name:</label>
+            <input type="text" id="userName" placeholder="Enter your name" />
+            <label for="userEmail">Email:</label>
+            <input type="email" id="userEmail" placeholder="Enter your email" />
+            <label for="withdrawAmount">Withdraw Amount ($):</label>
+            <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw" />
+            <label for="walletAddress">Wallet Address:</label>
+            <input type="text" id="walletAddress" placeholder="Enter your wallet address" />
+            <button class="confirm-btn" id="confirmWithdraw">Confirm Withdraw</button>
+        </div>
     </div>
-  </div>
 
-  <!-- Withdraw Modal -->
-  <div class="modal-overlay" id="withdrawModal">
-    <div class="modal-content">
-      <h2>Withdraw Form</h2>
-      <label for="userName">User Name:</label>
-      <input type="text" id="userName" placeholder="Enter your name" />
-      <label for="userEmail">Email:</label>
-      <input type="email" id="userEmail" placeholder="Enter your email" />
-      <label for="withdrawAmount">Withdraw Amount ($):</label>
-      <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw" />
-      <label for="walletAddress">Wallet Address:</label>
-      <input type="text" id="walletAddress" placeholder="Enter your wallet address" />
-      <button class="confirm-btn" id="confirmWithdraw">Confirm Withdraw</button>
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal-content">
+            <h2>Deposit Form</h2>
+            <div class="info-text">Binance ID: 0x1234567890abcdef1234567890abcdef12345678</div>
+            <label for="depositAmount">Deposit Amount ($):</label>
+            <input type="number" id="depositAmount" placeholder="Enter deposit amount" />
+            <label for="depositEmail">Email:</label>
+            <input type="email" id="depositEmail" placeholder="Enter your email" />
+            <label for="depositAccountName">Account Name:</label>
+            <input type="text" id="depositAccountName" placeholder="Enter your account name" />
+            <button class="confirm-btn" id="confirmDeposit">Confirm Deposit</button>
+        </div>
     </div>
-  </div>
 
-  <!-- Deposit Modal -->
-  <div class="modal-overlay" id="depositModal">
-    <div class="modal-content">
-      <h2>Deposit Form</h2>
-      <div class="info-text">Binance ID: 0x1234567890abcdef1234567890abcdef12345678</div>
-      <label for="depositAmount">Deposit Amount ($):</label>
-      <input type="number" id="depositAmount" placeholder="Enter deposit amount" />
-      <label for="depositEmail">Email:</label>
-      <input type="email" id="depositEmail" placeholder="Enter your email" />
-      <label for="depositAccountName">Account Name:</label>
-      <input type="text" id="depositAccountName" placeholder="Enter your account name" />
-      <button class="confirm-btn" id="confirmDeposit">Confirm Deposit</button>
+    <div class="modal-overlay" id="balanceModal">
+        <div class="modal-content">
+            <h2>Select Balance Type</h2>
+            <button class="confirm-btn" onclick="setBalance('demo')">Demo Balance</button>
+            <button class="confirm-btn" onclick="setBalance('live')">Live Balance</button>
+        </div>
     </div>
-  </div>
 
-  <!-- Balance Switch Modal -->
-  <div class="modal-overlay" id="balanceModal">
-    <div class="modal-content">
-      <h2>Select Balance Type</h2>
-      <button class="confirm-btn" onclick="setBalance('demo')">Demo Balance</button>
-      <button class="confirm-btn" onclick="setBalance('live')">Live Balance</button>
+    <div class="modal-overlay" id="accountModal">
+        <div class="modal-content">
+            <h2>Account Information</h2>
+            <div class="info-text" style="text-align:center; color:#888;">User info will be displayed here after login.</div>
+            <button class="confirm-btn" onclick="document.getElementById('accountModal').style.display='none'">Close</button>
+        </div>
     </div>
-  </div>
 
-  <!-- Account Info Modal (EMPTY) -->
-  <div class="modal-overlay" id="accountModal">
-    <div class="modal-content">
-      <h2>Account Information</h2>
-      <div class="info-text" style="text-align:center; color:#888;">User info will be displayed here after login.</div>
-      <button class="confirm-btn" onclick="document.getElementById('accountModal').style.display='none'">Close</button>
+    <div class="bottom-nav">
+        <div class="nav-item"><i class="fas fa-chart-line"></i>Market</div>
+        <div class="nav-item"><i class="fas fa-wallet"></i>Wallet</div>
+        <div class="nav-item" id="accountBtn"><i class="fas fa-user"></i>Account</div>
     </div>
-  </div>
 
-  <div class="bottom-nav">
-    <div class="nav-item"><i class="fas fa-chart-line"></i>Market</div>
-    <div class="nav-item"><i class="fas fa-wallet"></i>Wallet</div>
-    <div class="nav-item" id="accountBtn"><i class="fas fa-user"></i>Account</div>
-  </div>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        function calculateProfit() {
+            const amount = parseFloat(document.getElementById('tradeAmount').value);
+            const profitBox = document.getElementById('profitBox').querySelector('span');
+            if (!isNaN(amount)) {
+                profitBox.textContent = (amount * 0.75).toFixed(2);
+            } else {
+                profitBox.textContent = '0.00';
+            }
+        }
 
-  <script>
-    function calculateProfit() {
-      const amount = parseFloat(document.getElementById('tradeAmount').value);
-      const profitBox = document.getElementById('profitBox').querySelector('span');
-      if (!isNaN(amount)) {
-        profitBox.textContent = (amount * 0.75).toFixed(2);
-      } else {
-        profitBox.textContent = '0.00';
-      }
-    }
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const withdrawModal = document.getElementById('withdrawModal');
+        const depositBtn = document.getElementById('depositBtn');
+        const depositModal = document.getElementById('depositModal');
+        const balanceDisplay = document.getElementById('balanceSwitcher');
+        const balanceModal = document.getElementById('balanceModal');
+        const accountBtn = document.getElementById('accountBtn');
+        const accountModal = document.getElementById('accountModal');
 
-    const withdrawBtn = document.getElementById('withdrawBtn');
-    const withdrawModal = document.getElementById('withdrawModal');
-    const depositBtn = document.getElementById('depositBtn');
-    const depositModal = document.getElementById('depositModal');
-    const balanceDisplay = document.getElementById('balanceSwitcher');
-    const balanceModal = document.getElementById('balanceModal');
-    const accountBtn = document.getElementById('accountBtn');
-    const accountModal = document.getElementById('accountModal');
+        withdrawBtn.onclick = () => withdrawModal.style.display = 'flex';
+        depositBtn.onclick = () => depositModal.style.display = 'flex';
+        balanceDisplay.onclick = () => balanceModal.style.display = 'flex';
+        accountBtn.onclick = () => accountModal.style.display = 'flex';
 
-    withdrawBtn.onclick = () => withdrawModal.style.display = 'flex';
-    depositBtn.onclick = () => depositModal.style.display = 'flex';
-    balanceDisplay.onclick = () => balanceModal.style.display = 'flex';
-    accountBtn.onclick = () => accountModal.style.display = 'flex';
+        // Close modals when clicking outside modal-content
+        window.onclick = (event) => {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.style.display = 'none';
+            }
+        };
 
-    // Close modals when clicking outside modal-content
-    window.onclick = (event) => {
-      if (event.target.classList.contains('modal-overlay')) {
-        event.target.style.display = 'none';
-      }
-    };
+        document.getElementById('confirmWithdraw').onclick = () => {
+            alert('Withdraw request submitted!');
+            withdrawModal.style.display = 'none';
+        };
 
-    document.getElementById('confirmWithdraw').onclick = () => {
-      alert('Withdraw request submitted!');
-      withdrawModal.style.display = 'none';
-    };
+        document.getElementById('confirmDeposit').onclick = () => {
+            alert('Deposit request submitted!');
+            depositModal.style.display = 'none';
+        };
 
-    document.getElementById('confirmDeposit').onclick = () => {
-      alert('Deposit request submitted!');
-      depositModal.style.display = 'none';
-    };
+        function setBalance(type) {
+            if (type === 'demo') {
+                balanceDisplay.textContent = 'Balance: $500.00 (Demo)';
+                balanceDisplay.classList.remove('live');
+                balanceDisplay.classList.add('demo');
+            } else {
+                balanceDisplay.textContent = 'Balance: $0.00 (Live)';
+                balanceDisplay.classList.remove('demo');
+                balanceDisplay.classList.add('live');
+            }
+            balanceModal.style.display = 'none';
+        }
 
-    function setBalance(type) {
-      if (type === 'demo') {
-        balanceDisplay.textContent = 'Balance: $500.00 (Demo)';
-        // ক্লাস পরিবর্তন করে হলুদ রঙ আনবো
-        balanceDisplay.classList.remove('live');
-        balanceDisplay.classList.add('demo');
-      } else {
-        balanceDisplay.textContent = 'Balance: $0.00 (Live)';
-        // ক্লাস পরিবর্তন করে সবুজ রঙ আনবো
-        balanceDisplay.classList.remove('demo');
-        balanceDisplay.classList.add('live');
-      }
-      balanceModal.style.display = 'none';
-    }
-  </script>
+        // Initialize TradingView Chart
+        new TradingView.widget({
+            "container_id": "tradingview_chart_container",
+            "autosize": true,
+            "symbol": "FX:EURUSD",
+            "interval": "1", // ১ মিনিট টাইমফ্রেম
+            "timezone": "Asia/Dhaka",
+            "theme": "dark",
+            "style": "1",
+            "locale": "bn",
+            "hide_top_toolbar": true,
+            "hide_legend": true,
+            "hide_volume": true,
+            "backgroundColor": "#000000",
+            "gridColor": "#444",
+            "studies": [],
+            "withdateranges": true,
+            "allow_symbol_change": false
+        });
+    </script>
 </body>
 </html>
