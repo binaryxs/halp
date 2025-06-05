@@ -1,129 +1,134 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Help Panel</title>
+  <title>Binary Trading UI</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0e1420;
-      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #fff;
     }
 
-    .help-panel {
-      width: 360px;
-      background-color: #0e1420;
-      padding: 20px;
-      border-left: 1px solid #1f2a3a;
-      height: 100vh;
+    header {
+      background: #1e293b;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    .help-panel h2 {
-      margin-top: 0;
-      font-size: 20px;
-      color: #ffffff;
-    }
-
-    .section {
-      margin: 40px 0;
-      text-align: center;
-    }
-
-    .section img {
-      width: 32px;
-      height: 32px;
-      margin-bottom: 10px;
-    }
-
-    .section h3 {
-      margin: 5px 0;
+    .balance {
       font-size: 16px;
-      color: #ffffff;
+      color: #facc15;
+      font-weight: bold;
     }
 
-    .section p {
+    .top-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-deposit, .btn-withdraw {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-deposit {
+      background-color: #22c55e;
+    }
+
+    .btn-deposit:hover {
+      background-color: #16a34a;
+    }
+
+    .btn-withdraw {
+      background-color: #3b82f6;
+    }
+
+    .btn-withdraw:hover {
+      background-color: #2563eb;
+    }
+
+    .chart-section {
+      height: 480px; /* আগে ছিল 400px */
       margin: 0;
-      font-size: 13px;
-      color: #9aa9bb;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #64748b;
     }
 
     .divider {
-      height: 1px;
-      background-color: #1f2a3a;
-      margin: 20px 0;
+      height: 2px;
+      background-color: #334155;
+      margin: 0 20px;
     }
 
-    .bottom-contact {
-      text-align: center;
-      margin-top: 60px;
-      background-color: #121c2a;
-      padding: 20px 10px;
+    .trade-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .trade-buttons button {
+      flex: 1;
+      max-width: 200px;
+      padding: 15px;
+      font-size: 16px;
+      border: none;
       border-radius: 6px;
-    }
-
-    .bottom-contact img {
-      width: 28px;
-      margin-bottom: 10px;
-    }
-
-    .bottom-contact p {
-      color: #ffffff;
-      margin: 0 0 5px 0;
-      font-size: 13px;
-    }
-
-    .bottom-contact a {
-      color: #3390ff;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 13px;
-    }
-
-    .close-button {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 20px;
-      color: #9aa9bb;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .buy {
+      background: #22c55e;
+    }
+
+    .buy:hover {
+      background: #16a34a;
+    }
+
+    .sell {
+      background: #ef4444;
+    }
+
+    .sell:hover {
+      background: #dc2626;
     }
   </style>
 </head>
 <body>
-  <div class="help-panel">
-    <div class="close-button">✕</div>
-    <h2>Help</h2>
 
-    <div class="section">
-      <img src="https://img.icons8.com/fluency/48/faq.png" alt="FAQ" />
-      <h3>FAQ</h3>
-      <p>Open the database</p>
+  <header>
+    <div class="balance">Balance: $500.00</div>
+    <div class="top-buttons">
+      <button class="btn-deposit">Deposit</button>
+      <button class="btn-withdraw">Withdraw</button>
     </div>
+  </header>
 
-    <div class="divider"></div>
-
-    <div class="section">
-      <img src="https://img.icons8.com/color/48/graduation-cap.png" alt="Tutorials" />
-      <h3>Tutorials</h3>
-      <p>Use the hints</p>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="section">
-      <img src="https://img.icons8.com/fluency/48/technical-support.png" alt="Support" />
-      <h3>Support</h3>
-      <p>Submit a ticket</p>
-    </div>
-
-    <div class="bottom-contact">
-      <img src="https://img.icons8.com/fluency/48/help.png" alt="Question" />
-      <p>Didn't find an answer to your question?</p>
-      <a href="#">Contact support</a>
-    </div>
+  <div class="chart-section">
+    📊 Market Chart Will Be Displayed Here
   </div>
+
+  <div class="divider"></div>
+
+  <div class="trade-buttons">
+    <button class="buy">Buy ↑</button>
+    <button class="sell">Sell ↓</button>
+  </div>
+
 </body>
 </html>
