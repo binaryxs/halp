@@ -26,6 +26,11 @@
       font-size: 16px;
       color: #facc15;
       font-weight: bold;
+      cursor: pointer;
+    }
+
+    .live-balance {
+      color: #22c55e !important;
     }
 
     .top-buttons {
@@ -88,7 +93,6 @@
     .sell { background: #ef4444; }
     .sell:hover { background: #dc2626; }
 
-    /* New: trade-options as grid 2 columns */
     .trade-options {
       padding: 20px;
       display: grid;
@@ -120,26 +124,24 @@
     }
 
     .profit-box {
-      grid-column: span 2; /* Make profit box span both columns */
+      grid-column: span 2;
       background: #0f172a;
       border: 1px solid #334155;
-      padding: 8px 12px; /* ছোট করা প্যাডিং */
+      padding: 8px 12px;
       text-align: center;
       border-radius: 6px;
       font-weight: bold;
       font-size: 18px;
       color: #fff;
-      max-height: 36px; /* একটু ছোট height */
+      max-height: 36px;
       line-height: 1.2;
     }
 
-    /* Estimated Profit-এর ডলার অংশ সবুজ রঙে */
     #profitBox span {
       color: #22c55e;
       font-weight: 700;
     }
 
-    /* Bottom Navigation */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -171,7 +173,6 @@
       margin-bottom: 3px;
     }
 
-    /* Withdraw & Deposit Modal Styles */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -231,7 +232,7 @@
     }
 
     .modal-content button.confirm-btn {
-      margin-top: 20px;
+      margin-top: 15px;
       width: 100%;
       background: #3b82f6;
       border: none;
@@ -253,7 +254,7 @@
 <body>
 
   <header>
-    <div class="balance">Balance: $500.00</div>
+    <div class="balance" id="balanceSwitcher">Balance: $500.00 (Demo)</div>
     <div class="top-buttons">
       <button class="btn-deposit" id="depositBtn">Deposit</button>
       <button class="btn-withdraw" id="withdrawBtn">Withdraw</button>
@@ -330,7 +331,6 @@
     <div class="modal-content">
       <h2>Deposit Form</h2>
       <div class="fixed-binance-id" id="binanceId">
-        <!-- Fixed Binance ID here -->
         Binance ID: 0x1234567890abcdef1234567890abcdef12345678
       </div>
 
@@ -347,6 +347,15 @@
     </div>
   </div>
 
+  <!-- Balance Switch Modal -->
+  <div class="modal-overlay" id="balanceModal">
+    <div class="modal-content">
+      <h2>Select Balance Type</h2>
+      <button class="confirm-btn" onclick="setBalance('demo')">Demo Balance</button>
+      <button class="confirm-btn" onclick="setBalance('live')">Live Balance</button>
+    </div>
+  </div>
+
   <div class="bottom-nav">
     <div class="nav-item"><i class="fas fa-chart-line"></i>Market</div>
     <div class="nav-item"><i class="fas fa-wallet"></i>Wallet</div>
@@ -354,18 +363,16 @@
   </div>
 
   <script>
-    // Calculate profit placeholder
     function calculateProfit() {
       const amount = parseFloat(document.getElementById('tradeAmount').value);
       const profitBox = document.getElementById('profitBox').querySelector('span');
       if (!isNaN(amount)) {
-        profitBox.textContent = (amount * 0.75).toFixed(2); // 75% profit example
+        profitBox.textContent = (amount * 0.75).toFixed(2);
       } else {
         profitBox.textContent = '0.00';
       }
     }
 
-    // Modal open/close logic
     const withdrawBtn = document.getElementById('withdrawBtn');
     const withdrawModal = document.getElementById('withdrawModal');
     const depositBtn = document.getElementById('depositBtn');
@@ -378,25 +385,18 @@
       depositModal.style.display = 'flex';
     };
 
-    // Close modal if clicked outside modal-content
     window.onclick = function(event) {
-      if (event.target === withdrawModal) {
-        withdrawModal.style.display = 'none';
-      }
-      if (event.target === depositModal) {
-        depositModal.style.display = 'none';
-      }
+      if (event.target === withdrawModal) withdrawModal.style.display = 'none';
+      if (event.target === depositModal) depositModal.style.display = 'none';
+      if (event.target === balanceModal) balanceModal.style.display = 'none';
     };
 
-    // Confirm withdraw
     document.getElementById('confirmWithdraw').onclick = () => {
       alert('Withdraw request sent!');
       withdrawModal.style.display = 'none';
     };
 
-    // Confirm deposit
     document.getElementById('confirmDeposit').onclick = () => {
-      // Get input values (could validate here if needed)
       const depositAmount = document.getElementById('depositAmount').value.trim();
       const depositEmail = document.getElementById('depositEmail').value.trim();
       const depositAccountName = document.getElementById('depositAccountName').value.trim();
@@ -408,9 +408,26 @@
 
       alert('Deposit request sent!');
       depositModal.style.display = 'none';
-
-      // Here তুমি চাইলে ডাটাবেজ/ব্যাকএন্ড এ request পাঠাতে পারো
     };
+
+    const balanceDisplay = document.getElementById('balanceSwitcher');
+    const balanceModal = document.getElementById('balanceModal');
+
+    balanceDisplay.onclick = () => {
+      balanceModal.style.display = 'flex';
+    };
+
+    function setBalance(type) {
+      const balanceText = document.getElementById('balanceSwitcher');
+      if (type === 'demo') {
+        balanceText.textContent = 'Balance: $500.00 (Demo)';
+        balanceText.classList.remove('live-balance');
+      } else if (type === 'live') {
+        balanceText.textContent = 'Balance: $0.00 (Live)';
+        balanceText.classList.add('live-balance');
+      }
+      balanceModal.style.display = 'none';
+    }
   </script>
 </body>
 </html>
